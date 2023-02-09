@@ -31,7 +31,7 @@ static int open_connection(char *host, char *service) {
   int err;
 
   memset(&hints, 0, sizeof(struct addrinfo));
-  hints.ai_family = AF_UNSPEC;
+  hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
   if ((err = getaddrinfo(host, service, &hints, &res)) != 0) {
     fprintf(stderr, "getaddrinfo(3): %s\n", gai_strerror(err));
