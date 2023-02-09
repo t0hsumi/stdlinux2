@@ -11,14 +11,19 @@ static int open_connection(char *host, char *service);
 int main(int argc, char **argv) {
   int sock;
   FILE *f;
-  char buf[1024];
 
   sock = open_connection((argc > 1 ? argv[1] : "localhost"), "echo");
-  f = fdopen(sock, "r");
+  f = fdopen(sock, "w+");
   if (!f) {
     perror("fdopen(3)");
     exit(1);
   }
+
+  char *msg = argv[2];
+  fprintf(f, "%s\n", msg);
+  fflush(f);
+
+  char buf[1024];
   fgets(buf, sizeof(buf), f);
   fclose(f);
   fputs(buf, stdout);
@@ -31,7 +36,7 @@ static int open_connection(char *host, char *service) {
   int err;
 
   memset(&hints, 0, sizeof(struct addrinfo));
-  hints.ai_family = AF_INET;
+  hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
   if ((err = getaddrinfo(host, service, &hints, &res)) != 0) {
     fprintf(stderr, "getaddrinfo(3): %s\n", gai_strerror(err));
