@@ -33,7 +33,7 @@ static void do_cat(char *filepath) {
     if (nread == EOF || nread == 0)
       break;
     if (fwrite(buf, sizeof(char), nread, stdout) < nread)
-      break;
+      exit(1);
   }
   if (fclose(f) == EOF) {
     perror(filepath);
